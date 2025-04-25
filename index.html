@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CinemaVerse | Immersive Movie Experience</title>
+
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="stylesheet" href="interactiveexp.css">
+
+
+
+    <link rel="stylesheet" href="preloader.css">
+
+
+
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            dark: '#0a0e17',
+                            DEFAULT: '#111827',
+                            light: '#1f2937',
+                        },
+                        accent: {
+                            purple: '#7c3aed',
+                            violet: '#8b5cf6',
+                            pink: '#c026d3',
+                            neon: '#22d3ee'
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-primary-dark text-white overflow-x-hidden font-sans">
+    <!-- Particle Background -->
+    <div id="particles-js" class="fixed inset-0 z-0 opacity-40"></div>
+
+
+
+    <!-- WebGL Transition Canvas -->
+<div id="webgl-transition" class="fixed inset-0 z-[9999] pointer-events-none opacity-0"></div>
+
+
+
+    <div id="particles-js" class="fixed inset-0 z-0 opacity-40"></div>
+    <div id="loader">
+        <div id="loader-logo"><i class="fas fa-film"></i> CinemaVerse</div>
+        <div id="loader-bar">
+            <div id="loader-bar-inner"></div>
+        </div>
+    </div>
+    <!-- WebGL Transition Canvas -->
+    <div id="webgl-transition" class="fixed inset-0 z-[9999] pointer-events-none opacity-0"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Animated Background Gradients -->
+    <div
+        class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-accent-purple/30 blur-[120px] z-0 animate-pulse-slow">
+    </div>
+    <div
+        class="fixed bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-accent-pink/30 blur-[120px] z-0 animate-pulse-slow delay-1000">
+    </div>
+    <div
+        class="fixed top-[30%] left-[30%] w-[40vw] h-[40vw] rounded-full bg-accent-violet/30 blur-[120px] z-0 animate-pulse-slow delay-2000">
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-dot-outline"></div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 min-h-screen px-6 md:px-12 lg:px-20">
+        <!-- Header with Animated Logo -->
+        <header class="py-6 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="flex items-center gap-2" id="logo">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gradient-to-r from-accent-purple to-accent-pink flex items-center justify-center shadow-lg shadow-accent-purple/30">
+                        <i class="fas fa-film text-white"></i>
+                    </div>
+                    <span
+                        class="text-2xl font-bold font-heading bg-gradient-to-r from-accent-purple to-accent-violet bg-clip-text text-transparent">CinemaVerse</span>
+                </div>
+            </div>
+
+            <!-- Animated Navbar -->
+            <nav class="hidden md:block">
+                <ul class="flex gap-8">
+                    <li class="nav-item active"><a href="#" data-text="Home" class="relative py-2">Home</a></li>
+                    <li class="nav-item"><a href="movies.html" data-text="Movies" class="relative py-2">Movies</a></li>
+                    <li class="nav-item"><a href="tvshows.html" data-text="TV Shows" class="relative py-2">TV Shows</a></li>
+                    <li class="nav-item"><a href="#" data-text="New" class="relative py-2">New</a></li>
+                    <li class="nav-item"><a href="#" data-text="My List" class="relative py-2">My List</a></li>
+                </ul>
+            </nav>
+
+            <div class="flex items-center gap-6">
+                <!-- Search -->
+                <div class="relative hidden md:block">
+                    <input type="text" placeholder="Search..."
+                        class="bg-primary-light border border-white/10 rounded-full py-2 px-4 pr-10 w-48 focus:outline-none focus:ring-2 focus:ring-accent-violet transition-all duration-300">
+                    <button
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors duration-200">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+                <!-- Notification -->
+                <div class="relative cursor-pointer group">
+                    <i class="fas fa-bell text-gray-400 group-hover:text-white transition-colors duration-200"></i>
+                    <div
+                        class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-gradient-to-r from-accent-purple to-accent-pink flex items-center justify-center text-xs font-bold">
+                        3</div>
+
+                    <!-- Notification Dropdown -->
+                    <div
+                        class="absolute right-0 top-full mt-3 w-72 bg-primary/90 backdrop-blur-md border border-white/10 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                        <div class="p-3 border-b border-white/10">
+                            <h3 class="font-bold">Notifications</h3>
+                        </div>
+                        <div class="max-h-80 overflow-y-auto">
+                            <div class="p-3 border-b border-white/5 hover:bg-white/5 transition-colors duration-200">
+                                <p class="text-sm font-medium">New release: "Dune: Part Two" is now available</p>
+                                <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                            </div>
+                            <div class="p-3 border-b border-white/5 hover:bg-white/5 transition-colors duration-200">
+                                <p class="text-sm font-medium">Your watchlist has been updated</p>
+                                <p class="text-xs text-gray-400 mt-1">Yesterday</p>
+                            </div>
+                            <div class="p-3 hover:bg-white/5 transition-colors duration-200">
+                                <p class="text-sm font-medium">New comment on your review</p>
+                                <p class="text-xs text-gray-400 mt-1">3 days ago</p>
+                            </div>
+                        </div>
+                        <div class="p-2 text-center border-t border-white/10">
+                            <a href="#"
+                                class="text-sm text-accent-violet hover:text-accent-purple transition-colors duration-200">View
+                                all notifications</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Profile -->
+                <div class="relative cursor-pointer group">
+                    <img src="https://i.pravatar.cc/150?img=32" alt="User Profile"
+                        class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-accent-violet transition-all duration-300">
+
+                    <!-- Profile Dropdown -->
+                    <div
+                        class="absolute right-0 top-full mt-3 w-48 bg-primary/90 backdrop-blur-md border border-white/10 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                        <ul>
+                            <li class="flex items-center gap-2 p-3 hover:bg-white/5 transition-colors duration-200">
+                                <i class="fas fa-user text-accent-violet"></i>
+                                <span>Profile</span>
+                            </li>
+                            <li class="flex items-center gap-2 p-3 hover:bg-white/5 transition-colors duration-200">
+                                <i class="fas fa-cog text-accent-violet"></i>
+                                <span>Settings</span>
+                            </li>
+                            <li class="flex items-center gap-2 p-3 hover:bg-white/5 transition-colors duration-200">
+                                <i class="fas fa-sign-out-alt text-accent-violet"></i>
+                                <span>Logout</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-2xl" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Mobile Menu -->
+        <div class="fixed inset-0 bg-primary/95 backdrop-blur-md z-50 transform translate-x-full transition-transform duration-300"
+            id="mobile-menu">
+            <div class="flex justify-end p-6">
+                <button id="close-menu-btn" class="text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul class="flex flex-col items-center gap-6 text-xl">
+                <li><a href="#" class="hover:text-accent-violet transition-colors duration-200">Home</a></li>
+                <li><a href="movies.html" class="hover:text-accent-violet transition-colors duration-200">Movies</a>
+                </li>
+                <li><a href="tvshows.html" class="hover:text-accent-violet transition-colors duration-200">TV Shows</a></li>
+                <li><a href="#" class="hover:text-accent-violet transition-colors duration-200">New</a></li>
+                <li><a href="#" class="hover:text-accent-violet transition-colors duration-200">My List</a></li>
+            </ul>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="flex flex-col lg:flex-row gap-12 py-12 min-h-[calc(100vh-100px)]">
+            <!-- Left Content -->
+            <div class="flex-1 flex flex-col justify-center" id="hero-content">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-heading leading-tight mb-6">
+                    <span
+                        class="bg-gradient-to-r from-accent-purple to-accent-violet bg-clip-text text-transparent">Cinematic</span>
+                    <span class="text-reveal relative inline-block">Experiences</span>
+                    <span
+                        class="bg-gradient-to-r from-accent-violet to-accent-pink bg-clip-text text-transparent">Reimagined</span>
+                </h1>
+
+                <p class="text-gray-300 text-lg mb-8 max-w-xl">Dive into a world of immersive storytelling with our
+                    curated collection of blockbusters, indies, and exclusive originals.</p>
+
+
+
+
+
+                <div class="flex flex-wrap gap-4 mb-8">
+                    <button id="open-signup"
+                        class="cta-primary bg-gradient-to-r from-accent-purple to-accent-pink text-white py-3 px-6 rounded-full font-medium flex items-center gap-2 transform hover:-translate-y-1 transition-all duration-300 shadow-lg shadow-accent-purple/30">
+                        <i class="fas fa-play"></i>
+                        <span>Start Watching</span>
+                    </button>
+
+                    <button
+                        class="cta-secondary bg-transparent border-2 border-accent-violet text-white py-3 px-6 rounded-full font-medium flex items-center gap-2 transform hover:-translate-y-1 transition-all duration-300">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Explore Plans</span>
+                    </button>
+                </div>
+
+
+
+
+
+
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <span class="text-gray-400">Trending:</span>
+                    <span
+                        class="tag px-3 py-1 bg-white/10 rounded-full text-sm cursor-pointer hover:bg-accent-violet hover:text-white transition-all duration-300 transform hover:-translate-y-1">Sci-Fi</span>
+                    <span
+                        class="tag px-3 py-1 bg-white/10 rounded-full text-sm cursor-pointer hover:bg-accent-violet hover:text-white transition-all duration-300 transform hover:-translate-y-1">Action</span>
+                    <span
+                        class="tag px-3 py-1 bg-white/10 rounded-full text-sm cursor-pointer hover:bg-accent-violet hover:text-white transition-all duration-300 transform hover:-translate-y-1">Drama</span>
+                    <span
+                        class="tag px-3 py-1 bg-white/10 rounded-full text-sm cursor-pointer hover:bg-accent-violet hover:text-white transition-all duration-300 transform hover:-translate-y-1">Comedy</span>
+                </div>
+            </div>
+
+
+
+
+            <!-- Right Content - Movie Showcase -->
+            <div class="flex-1 relative" id="movie-showcase">
+                <!-- Movie Carousel -->
+                <div
+                    class="movie-carousel relative h-[500px] w-full max-w-[600px] mx-auto lg:mx-0 rounded-2xl overflow-hidden shadow-2xl shadow-black/50">
+                    <div class="movie-slides relative h-full w-full">
+                        <!-- Movie slides will be inserted here by JavaScript -->
+                    </div>
+
+                    <!-- Movie Info Overlay -->
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/90 to-transparent">
+                        <h3 class="movie-title text-2xl font-bold mb-2"></h3>
+                        <div class="movie-meta flex gap-4 text-sm text-gray-300 mb-4">
+                            <span class="movie-year"></span>
+                            <span class="movie-rating"></span>
+                            <span class="movie-duration"></span>
+                            <div class="flex items-center gap-1">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="movie-score"></span>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button
+                                class="play-trailer bg-accent-violet hover:bg-accent-purple text-white py-2 px-4 rounded-full flex items-center gap-2 transition-colors duration-300">
+                                <i class="fas fa-play"></i>
+                                <span>Play Trailer</span>
+                            </button>
+                            <button
+                                class="more-info bg-white/20 hover:bg-white/30 text-white py-2 px-4 rounded-full flex items-center gap-2 transition-colors duration-300">
+                                <i class="fas fa-info-circle"></i>
+                                <span>More Info</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Arrows -->
+                    <button
+                        class="absolute top-1/2 left-4 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-accent-violet transition-colors duration-300 z-10"
+                        id="prev-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button
+                        class="absolute top-1/2 right-4 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-accent-violet transition-colors duration-300 z-10"
+                        id="next-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    <!-- Progress Indicators -->
+                    <div class="absolute bottom-28 left-1/2 -translate-x-1/2 flex gap-2 z-10" id="slide-indicators">
+                        <!-- Indicators will be inserted here by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Floating Elements -->
+                <div
+                    class="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-accent-purple/20 blur-xl animate-float">
+                </div>
+                <div
+                    class="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-accent-pink/20 blur-xl animate-float delay-1000">
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+
+
+
+    <!-- Trending Section -->
+    <section class="trending-section">
+        <div class="trending-header">
+            <h2 class="trending-title">Trending Content</h2>
+        </div>
+
+        <div class="trending-tabs">
+            <div class="trending-tab active" data-tab="movies">Movies</div>
+            <div class="trending-tab" data-tab="shows">TV Shows</div>
+        </div>
+
+        <div class="trending-carousel">
+            <div class="trending-track">
+                <!-- Trending items will be inserted here by JavaScript -->
+            </div>
+
+            <button class="trending-nav-btn trending-prev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="trending-nav-btn trending-next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <div class="trending-progress">
+                <!-- Progress dots will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </section>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Trailer Modal -->
+    <div
+        class="trailer-modal fixed inset-0 bg-black/90 z-[100] flex items-center justify-center opacity-0 invisible transition-all duration-300">
+        <div
+            class="modal-content bg-primary w-[90%] max-w-5xl rounded-xl overflow-hidden transform scale-95 transition-all duration-300">
+            <div class="relative">
+                <button
+                    class="close-modal absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-accent-pink transition-colors duration-300">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="trailer-container relative w-full pt-[56.25%]">
+                    <iframe class="trailer-iframe absolute top-0 left-0 w-full h-full" allowfullscreen></iframe>
+                </div>
+                <div class="p-6">
+                    <h3 class="modal-movie-title text-2xl font-bold mb-2"></h3>
+                    <div class="modal-movie-meta flex flex-wrap gap-4 text-sm text-gray-300 mb-4">
+                        <span class="modal-movie-year"></span>
+                        <span class="modal-movie-rating"></span>
+                        <span class="modal-movie-duration"></span>
+                    </div>
+                    <p class="modal-movie-description text-gray-300 mb-6"></p>
+                    <div class="modal-movie-cast">
+                        <h4 class="text-lg font-medium mb-3">Starring</h4>
+                        <div class="cast-list flex gap-6 overflow-x-auto pb-4">
+                            <!-- Cast members will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="script.js"></script>
+
+
+
+
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0a0e17',
+                        'primary': '#111827',
+                        'primary-light': '#1f2937',
+                        'accent-purple': '#7c3aed',
+                        'accent-violet': '#8b5cf6',
+                        'accent-pink': '#c026d3',
+                        'accent-neon': '#22d3ee'
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'display': ['Montserrat', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --primary-dark: #0a0e17;
+            --primary: #111827;
+            --primary-light: #1f2937;
+            --accent-purple: #7c3aed;
+            --accent-violet: #8b5cf6;
+            --accent-pink: #c026d3;
+            --accent-neon: #22d3ee;
+        }
+
+        body {
+            background-color: var(--primary-dark);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Modal Background Animation */
+        .modal-bg-gradient {
+            background: linear-gradient(135deg,
+                    rgba(124, 58, 237, 0.1),
+                    rgba(139, 92, 246, 0.05),
+                    rgba(194, 38, 211, 0.1));
+            animation: gradientShift 15s ease infinite;
+            background-size: 400% 400%;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.3);
+            pointer-events: none;
+        }
+
+        /* Input focus effect */
+        .form-input:focus {
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Custom checkbox */
+        .custom-checkbox:checked {
+            background-color: var(--accent-violet);
+            border-color: var(--accent-violet);
+        }
+
+        .custom-checkbox:checked::before {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.75rem;
+        }
+
+        /* Button hover effect */
+        .signup-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .signup-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s;
+            z-index: 1;
+        }
+
+        .signup-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Modal backdrop blur */
+        .backdrop-blur {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* Glass effect */
+        .glass-effect {
+            background: rgba(31, 41, 55, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Enhanced form input animations */
+        .form-group {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-group::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--accent-neon), var(--accent-violet));
+            transition: width 0.4s ease;
+        }
+
+        .form-group:focus-within::after {
+            width: 100%;
+        }
+
+        /* Glow effect for active elements */
+        .glow-effect {
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Pulse animation for CTA */
+        @keyframes pulse-border {
+            0% {
+                box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse-border 2s infinite;
+        }
+
+        /* Close button hover effect */
+        #close-modal {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 50 !important;
+        }
+
+        #close-modal:hover {
+            transform: rotate(90deg);
+            color: var(--accent-neon);
+        }
+
+        /* Floating label effect */
+        .floating-label {
+            position: absolute;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            color: #9ca3af;
+        }
+
+        .form-input:focus+.floating-label,
+        .form-input:not(:placeholder-shown)+.floating-label {
+            top: 0;
+            left: 10px;
+            font-size: 0.75rem;
+            color: var(--accent-neon);
+            background-color: rgba(31, 41, 55, 0.8);
+            padding: 0 5px;
+        }
+
+        /* Social login button hover effects */
+        .social-btn {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-neon));
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-btn:hover::before {
+            opacity: 0.8;
+        }
+
+        /* Modal height fix */
+        .modal-container {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* Ensure close button is always visible */
+        #close-modal {
+            position: sticky;
+            top: 4px;
+            right: 4px;
+            background-color: rgba(31, 41, 55, 0.7);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            float: right;
+        }
+
+        /* Add some padding to the form content */
+        .form-content {
+            padding-top: 10px;
+        }
+    </style>
+    </head>
+
+    <body class="min-h-screen flex items-center justify-center p-4">
+        <!-- CTA Button to open modal -->
+
+
+        <!-- Signup Modal -->
+        <div id="signup-modal"
+            class="fixed inset-0 flex items-center justify-center z-50 opacity-0 pointer-events-none">
+            <!-- Backdrop -->
+            <div class="absolute inset-0 bg-black/60 backdrop-blur"></div>
+
+            <!-- Modal Container -->
+            <div
+                class="modal-container relative w-full max-w-md mx-4 glass-effect rounded-2xl overflow-hidden opacity-0 scale-95 transform">
+                <!-- Close Button -->
+                <button id="close-modal" class="text-gray-400 hover:text-white cursor-pointer">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+
+                <!-- Modal Background with Animation -->
+                <div class="modal-bg-gradient absolute inset-0 z-0"></div>
+
+                <!-- Floating Particles -->
+                <div id="particles-container" class="absolute inset-0 z-0 overflow-hidden"></div>
+
+                <!-- Content -->
+                <div class="relative z-10 p-8 form-content">
+                    <!-- Header -->
+                    <div class="text-center mb-6">
+                        <div class="inline-block mb-2">
+                            <i
+                                class="fas fa-film text-4xl bg-gradient-to-r from-accent-neon to-accent-pink inline-block text-transparent bg-clip-text"></i>
+                        </div>
+                        <h2
+                            class="text-3xl font-display font-bold bg-gradient-to-r from-accent-neon via-accent-violet to-accent-pink inline-block text-transparent bg-clip-text">
+                            Join the Experience</h2>
+                        <p class="text-gray-300 mt-2">Create your account and start streaming</p>
+                    </div>
+
+                    <!-- Form -->
+                    <form id="signup-form" class="space-y-4">
+                        <!-- Name Input -->
+                        <div class="form-group">
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" id="name"
+                                    class="form-input w-full py-3 pl-10 pr-4 bg-primary-light/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-violet text-white placeholder-transparent"
+                                    placeholder="Full Name" required>
+                                <label for="name" class="floating-label">Full Name</label>
+                            </div>
+                        </div>
+
+                        <!-- Email Input -->
+                        <div class="form-group">
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input type="email" id="email"
+                                    class="form-input w-full py-3 pl-10 pr-4 bg-primary-light/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-violet text-white placeholder-transparent"
+                                    placeholder="Email Address" required>
+                                <label for="email" class="floating-label">Email Address</label>
+                            </div>
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="form-group">
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" id="password"
+                                    class="form-input w-full py-3 pl-10 pr-12 bg-primary-light/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-violet text-white placeholder-transparent"
+                                    placeholder="Password" required>
+                                <label for="password" class="floating-label">Password</label>
+                                <button type="button" id="toggle-password"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-200 cursor-pointer">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Terms Checkbox -->
+                        <div class="flex items-center">
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="terms" type="checkbox"
+                                        class="custom-checkbox appearance-none h-4 w-4 border border-gray-500 rounded bg-primary-light/50 checked:bg-accent-violet focus:outline-none transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer relative"
+                                        required>
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="terms" class="text-gray-300">I agree to the <a href="#"
+                                            class="text-accent-neon hover:underline">Terms of Service</a> and <a
+                                            href="#" class="text-accent-neon hover:underline">Privacy Policy</a></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit"
+                            class="signup-btn w-full py-3 px-4 bg-gradient-to-r from-accent-purple to-accent-pink text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center mt-4">
+                            <span>Create Account</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+
+                        <!-- Social Login -->
+                        <div class="relative flex items-center justify-center mt-4">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-700"></div>
+                            </div>
+                            <div class="relative px-4 bg-primary-light/50 text-sm text-gray-400">Or continue with</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <button type="button"
+                                class="social-btn flex items-center justify-center py-2.5 px-4 bg-primary-light/50 hover:bg-primary-light border border-gray-700 rounded-lg transition-all duration-200">
+                                <i class="fab fa-google text-white mr-2"></i>
+                                <span class="text-sm text-white">Google</span>
+                            </button>
+                            <button type="button"
+                                class="social-btn flex items-center justify-center py-2.5 px-4 bg-primary-light/50 hover:bg-primary-light border border-gray-700 rounded-lg transition-all duration-200">
+                                <i class="fab fa-facebook-f text-white mr-2"></i>
+                                <span class="text-sm text-white">Facebook</span>
+                            </button>
+                        </div>
+
+                        <!-- Login Link -->
+                        <div class="text-center text-sm text-gray-400">
+                            Already have an account? <a href="#" class="text-accent-neon hover:underline">Sign in</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Create particles with enhanced animation
+            function createParticles() {
+                const container = document.getElementById('particles-container');
+                const particleCount = 20;
+
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+
+                    // Random size between 3px and 8px
+                    const size = Math.random() * 5 + 3;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+
+                    // Random position
+                    const posX = Math.random() * 100;
+                    const posY = Math.random() * 100;
+                    particle.style.left = `${posX}%`;
+                    particle.style.top = `${posY}%`;
+
+                    // Random opacity and color
+                    particle.style.opacity = Math.random() * 0.5 + 0.1;
+
+                    // Random color variation
+                    const hue = Math.random() * 60 + 240; // Blue to purple range
+                    particle.style.backgroundColor = `hsla(${hue}, 70%, 60%, 0.3)`;
+
+                    // Add to container
+                    container.appendChild(particle);
+
+                    // Animate with GSAP - more complex movement
+                    gsap.to(particle, {
+                        x: `${Math.random() * 120 - 60}px`,
+                        y: `${Math.random() * 120 - 60}px`,
+                        duration: Math.random() * 15 + 15,
+                        repeat: -1,
+                        yoyo: true,
+                        ease: "sine.inOut",
+                        delay: Math.random() * 5
+                    });
+
+                    // Pulse animation
+                    gsap.to(particle, {
+                        opacity: Math.random() * 0.7 + 0.1,
+                        scale: Math.random() * 1.5 + 0.5,
+                        duration: Math.random() * 4 + 2,
+                        repeat: -1,
+                        yoyo: true,
+                        ease: "sine.inOut",
+                        delay: Math.random() * 5
+                    });
+                }
+            }
+
+            // Initialize modal functionality with enhanced animations
+            function initModal() {
+                const openBtn = document.getElementById('open-signup');
+                const closeBtn = document.getElementById('close-modal');
+                const modal = document.getElementById('signup-modal');
+                const modalContainer = document.querySelector('.modal-container');
+                const form = document.getElementById('signup-form');
+                const togglePassword = document.getElementById('toggle-password');
+                const passwordInput = document.getElementById('password');
+
+                // Open modal with enhanced animations
+                openBtn.addEventListener('click', () => {
+                    // Show modal and enable pointer events
+                    modal.style.pointerEvents = 'auto';
+
+                    // Animate with GSAP
+                    const tl = gsap.timeline();
+
+                    tl.to(modal, {
+                        opacity: 1,
+                        duration: 0.4,
+                        ease: "power3.out"
+                    })
+                        .to(modalContainer, {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.6,
+                            ease: "back.out(1.7)"
+                        }, "-=0.2")
+                        .fromTo('.form-group', {
+                            opacity: 0,
+                            y: 30,
+                            scale: 0.95
+                        }, {
+                            opacity: 1,
+                            y: 0,
+                            scale: 1,
+                            stagger: 0.1,
+                            duration: 0.5,
+                            ease: "power3.out"
+                        }, "-=0.3")
+                        .fromTo('#signup-form button, #signup-form .flex, #signup-form .grid, #signup-form .text-center', {
+                            opacity: 0,
+                            y: 20
+                        }, {
+                            opacity: 1,
+                            y: 0,
+                            stagger: 0.08,
+                            duration: 0.4,
+                            ease: "power2.out"
+                        }, "-=0.2");
+
+                    // Add glow effect to modal
+                    gsap.fromTo(modalContainer,
+                        { boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)' },
+                        {
+                            boxShadow: '0 8px 32px 0 rgba(139, 92, 246, 0.3), 0 0 0 1px rgba(139, 92, 246, 0.2)',
+                            duration: 1,
+                            ease: "power2.inOut"
+                        }
+                    );
+                });
+
+                // Fix for close button - direct event handler
+                if (closeBtn) {
+                    closeBtn.onclick = function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        // Animate out with GSAP
+                        const tl = gsap.timeline({
+                            onComplete: () => {
+                                modal.style.pointerEvents = 'none';
+                            }
+                        });
+
+                        tl.to(modalContainer, {
+                            opacity: 0,
+                            scale: 0.95,
+                            y: -20,
+                            duration: 0.4,
+                            ease: "power3.in"
+                        })
+                            .to(modal, {
+                                opacity: 0,
+                                duration: 0.3,
+                                ease: "power3.in"
+                            }, "-=0.2");
+                    };
+                }
+
+                // Close when clicking outside
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeBtn.onclick(e);
+                    }
+                });
+
+                // Toggle password visibility with animation
+                togglePassword.addEventListener('click', () => {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    // Toggle icon with animation
+                    const icon = togglePassword.querySelector('i');
+
+                    gsap.to(icon, {
+                        scale: 0,
+                        duration: 0.2,
+                        ease: "power2.in",
+                        onComplete: () => {
+                            icon.classList.toggle('fa-eye');
+                            icon.classList.toggle('fa-eye-slash');
+
+                            gsap.to(icon, {
+                                scale: 1,
+                                duration: 0.2,
+                                ease: "back.out(1.7)"
+                            });
+                        }
+                    });
+                });
+
+                // Form submission with enhanced animations
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    // Animate button
+                    const submitBtn = form.querySelector('button[type="submit"]');
+
+                    gsap.timeline()
+                        .to(submitBtn, {
+                            scale: 0.95,
+                            duration: 0.1,
+                            ease: "power2.in"
+                        })
+                        .to(submitBtn, {
+                            scale: 1,
+                            duration: 0.2,
+                            ease: "back.out(1.7)",
+                            onComplete: () => {
+                                // Create success animation
+                                const successTl = gsap.timeline();
+
+                                // First shrink the text
+                                successTl.to(submitBtn.querySelector('span'), {
+                                    opacity: 0,
+                                    scale: 0.5,
+                                    duration: 0.2,
+                                    ease: "power2.in"
+                                })
+                                    .to(submitBtn.querySelector('i'), {
+                                        opacity: 0,
+                                        scale: 0.5,
+                                        duration: 0.2,
+                                        ease: "power2.in"
+                                    }, "-=0.2")
+                                    // Change the background
+                                    .to(submitBtn, {
+                                        background: 'linear-gradient(to right, #10B981, #059669)',
+                                        duration: 0.3,
+                                        ease: "power2.inOut"
+                                    }, "-=0.1")
+                                    // Show success message
+                                    .call(() => {
+                                        submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Success!';
+                                    })
+                                    // Animate in the success message
+                                    .fromTo(submitBtn.children, {
+                                        opacity: 0,
+                                        scale: 0.5
+                                    }, {
+                                        opacity: 1,
+                                        scale: 1,
+                                        duration: 0.3,
+                                        ease: "back.out(1.7)"
+                                    })
+                                    // Add a glow effect
+                                    .to(submitBtn, {
+                                        boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)',
+                                        duration: 0.5
+                                    }, "-=0.3");
+
+                                // Close modal after delay with success animation
+                                setTimeout(() => {
+                                    // First animate success button
+                                    gsap.to(submitBtn, {
+                                        y: -10,
+                                        opacity: 0,
+                                        duration: 0.4,
+                                        ease: "power3.in"
+                                    });
+
+                                    // Then close modal
+                                    setTimeout(() => {
+                                        closeBtn.onclick(new Event('click'));
+
+                                        // Reset form after closing
+                                        setTimeout(() => {
+                                            form.reset();
+                                            submitBtn.innerHTML = '<span>Create Account</span><i class="fas fa-arrow-right ml-2"></i>';
+                                            gsap.set(submitBtn, {
+                                                clearProps: "all"
+                                            });
+                                        }, 500);
+                                    }, 400);
+                                }, 1500);
+                            }
+                        });
+                });
+
+                // Enhanced input focus animations
+                const inputs = document.querySelectorAll('.form-input');
+
+                inputs.forEach(input => {
+                    const parent = input.closest('.form-group');
+
+                    input.addEventListener('focus', () => {
+                        gsap.to(parent, {
+                            scale: 1.02,
+                            duration: 0.3,
+                            ease: "power2.out"
+                        });
+
+                        // Add glow effect
+                        gsap.to(input, {
+                            boxShadow: '0 0 0 2px rgba(139, 92, 246, 0.3), 0 0 15px rgba(139, 92, 246, 0.2)',
+                            duration: 0.3
+                        });
+                    });
+
+                    input.addEventListener('blur', () => {
+                        gsap.to(parent, {
+                            scale: 1,
+                            duration: 0.3,
+                            ease: "power2.in"
+                        });
+
+                        // Remove glow effect if not filled
+                        if (!input.value) {
+                            gsap.to(input, {
+                                boxShadow: 'none',
+                                duration: 0.3
+                            });
+                        }
+                    });
+                });
+
+                // Social button hover effects
+                const socialBtns = document.querySelectorAll('.social-btn');
+
+                socialBtns.forEach(btn => {
+                    btn.addEventListener('mouseenter', () => {
+                        gsap.to(btn, {
+                            y: -3,
+                            boxShadow: '0 6px 15px rgba(139, 92, 246, 0.3)',
+                            duration: 0.3,
+                            ease: "power2.out"
+                        });
+                    });
+
+                    btn.addEventListener('mouseleave', () => {
+                        gsap.to(btn, {
+                            y: 0,
+                            boxShadow: '0 0 0 rgba(139, 92, 246, 0)',
+                            duration: 0.3,
+                            ease: "power2.in"
+                        });
+                    });
+                });
+            }
+
+            // Initialize everything when DOM is loaded
+            document.addEventListener('DOMContentLoaded', () => {
+                createParticles();
+                initModal();
+
+                // Add pulse animation to CTA button
+                const ctaButton = document.getElementById('open-signup');
+
+                // Subtle hover animation for CTA
+                ctaButton.addEventListener('mouseenter', () => {
+                    gsap.to(ctaButton, {
+                        scale: 1.05,
+                        boxShadow: '0 8px 25px rgba(139, 92, 246, 0.5)',
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                });
+
+                ctaButton.addEventListener('mouseleave', () => {
+                    gsap.to(ctaButton, {
+                        scale: 1,
+                        boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)',
+                        duration: 0.3,
+                        ease: "power2.in"
+                    });
+                });
+            });
+        </script>
+
+
+
+
+
+        <main class="py-12">
+            <!-- Plain Immersive 3D Models Section -->
+            <section class="py-16 px-4 md:px-16">
+                <div class="max-w-5xl mx-auto text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        Interactive 3D Experience
+                    </h2>
+                    <div class="grid md:grid-cols-2 gap-12">
+                        <!-- Beverages 3D Model -->
+                        <div>
+                            <model-viewer src="models/popcorn.glb" alt="Beverages 3D Model" camera-controls disable-zoom
+                                disable-pan disable-tap auto-rotate ar shadow-intensity="1"
+                                style="width:100%;height:350px;"></model-viewer>
+                            <h3 class="text-xl font-semibold mt-4 mb-2">Beverages</h3>
+                        </div>
+                        <!-- Popcorn Machine 3D Model -->
+                        <div>
+                            <model-viewer src="models/popcorn_machine.glb" alt="Popcorn Machine 3D Model"
+                                camera-controls disable-zoom disable-pan disable-tap auto-rotate ar shadow-intensity="1"
+                                style="width:100%;height:350px;"></model-viewer>
+                            <h3 class="text-xl font-semibold mt-4 mb-2">Popcorn Machine</h3>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-gray-400 text-sm">Tip: Drag to rotate, scroll to zoom!</div>
+                </div>
+            </section>
+
+            <!-- Featured Screenings Section -->
+            <section class="tickets-section">
+                <h2 class="section-title">Featured Screenings</h2>
+                <div class="tickets-container">
+                    <!-- Ticket 1 -->
+                    <div class="ticket">
+                        <div class="ticket-content">
+                            <div class="ticket-header">
+                                <span class="ticket-label">VIP</span>
+                                <span class="ticket-theater">IMAX</span>
+                            </div>
+                            <h3 class="ticket-movie">Dune: Part Two</h3>
+                            <div class="ticket-details">
+                                <p><i class="fas fa-calendar-alt"></i> May 15, 2023</p>
+                                <p><i class="fas fa-clock"></i> 7:30 PM</p>
+                            </div>
+                            <div class="ticket-qr">
+                                <div class="qr-code"></div>
+                            </div>
+                            <div class="ticket-footer">
+                                <span class="ticket-price">$14.99</span>
+                                <button class="ticket-button">Book Now</button>
+                            </div>
+                        </div>
+                        <div class="ticket-stripes"></div>
+                        <div class="ticket-glow"></div>
+                    </div>
+
+                    <!-- Ticket 2 -->
+                    <div class="ticket">
+                        <div class="ticket-content">
+                            <div class="ticket-header">
+                                <span class="ticket-label">PREMIERE</span>
+                                <span class="ticket-theater">DOLBY</span>
+                            </div>
+                            <h3 class="ticket-movie">The Batman</h3>
+                            <div class="ticket-details">
+                                <p><i class="fas fa-calendar-alt"></i> May 20, 2023</p>
+                                <p><i class="fas fa-clock"></i> 8:00 PM</p>
+                            </div>
+                            <div class="ticket-qr">
+                                <div class="qr-code"></div>
+                            </div>
+                            <div class="ticket-footer">
+                                <span class="ticket-price">$16.99</span>
+                                <button class="ticket-button">Book Now</button>
+                            </div>
+                        </div>
+                        <div class="ticket-stripes"></div>
+                        <div class="ticket-glow"></div>
+                    </div>
+
+                    <!-- Ticket 3 -->
+                    <div class="ticket">
+                        <div class="ticket-content">
+                            <div class="ticket-header">
+                                <span class="ticket-label">STANDARD</span>
+                                <span class="ticket-theater">SCREEN 5</span>
+                            </div>
+                            <h3 class="ticket-movie">Spider-Man: No Way Home</h3>
+                            <div class="ticket-details">
+                                <p><i class="fas fa-calendar-alt"></i> May 18, 2023</p>
+                                <p><i class="fas fa-clock"></i> 6:45 PM</p>
+                            </div>
+                            <div class="ticket-qr">
+                                <div class="qr-code"></div>
+                            </div>
+                            <div class="ticket-footer">
+                                <span class="ticket-price">$12.99</span>
+                                <button class="ticket-button">Book Now</button>
+                            </div>
+                        </div>
+                        <div class="ticket-stripes"></div>
+                        <div class="ticket-glow"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-8 text-center text-gray-400">
+            <p>© 2023 CinemaVerse. All rights reserved.</p>
+        </footer>
+        </div>
+
+        <script>
+            // Optional: Add any JavaScript specific to this page if needed
+            document.addEventListener('DOMContentLoaded', () => {
+                // You can add interactive elements here if needed
+                console.log('3D Experience page loaded');
+
+                // Ticket hover effect
+                document.querySelectorAll('.ticket').forEach(ticket => {
+                    ticket.addEventListener('mouseenter', () => {
+                        // Any additional hover effects can be added here
+                    });
+                });
+            });
+
+        </script>
+
+
+
+
+        <!-- Add navigation script -->
+        <script>
+            // Handle navigation links
+            document.addEventListener('DOMContentLoaded', function() {
+                // Function to navigate to specified page
+                function navigateTo(url) {
+                    window.location.href = url;
+                }
+                
+                // Get all TV Shows links
+                const tvShowsLinks = document.querySelectorAll('a[href="tvshows.html"]');
+                
+                // Add click event listeners
+                tvShowsLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo('tvshows.html');
+                    });
+                });
+                
+                // Also handle movies links
+                const moviesLinks = document.querySelectorAll('a[href="movies.html"]');
+                moviesLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo('movies.html');
+                    });
+                });
+            });
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <script src="webglshader.js"></script>
+        <script src="preloader.js"></script>
+
+        <!-- Add navigation script -->
+        <script>
+            // Handle navigation links
+            document.addEventListener('DOMContentLoaded', function() {
+                // Function to navigate to specified page
+                function navigateTo(url) {
+                    window.location.href = url;
+                }
+                
+                // Get all TV Shows links
+                const tvShowsLinks = document.querySelectorAll('a[href="tvshows.html"]');
+                
+                // Add click event listeners
+                tvShowsLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo('tvshows.html');
+                    });
+                });
+                
+                // Also handle movies links
+                const moviesLinks = document.querySelectorAll('a[href="movies.html"]');
+                moviesLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo('movies.html');
+                    });
+                });
+            });
+        </script>
+
+    </body>
+
+</html>

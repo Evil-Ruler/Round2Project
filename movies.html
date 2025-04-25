@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="movies.css">
+  <title>Immersive Movies Experience</title>
+  <!-- Add Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              dark: '#0a0e17',
+              DEFAULT: '#111827',
+              light: '#1f2937',
+            },
+            accent: {
+              purple: '#7c3aed',
+              violet: '#8b5cf6',
+              pink: '#c026d3',
+            },
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+            heading: ['Montserrat', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="movies.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Particles.js -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <!-- GSAP Animation Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+</head>
+<body>
+  <!-- Particle Background -->
+  <div id="particles-js" class="fixed inset-0 z-0 opacity-40"></div>
+  
+  <!-- WebGL Transition Canvas -->
+  <div id="webgl-transition" class="fixed inset-0 z-[9999] pointer-events-none opacity-0"></div>
+  
+  <!-- Animated Background Gradients -->
+  <div class="bg-gradient-1"></div>
+  <div class="bg-gradient-2"></div>
+  <div class="bg-gradient-3"></div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-dot-outline"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="navigation-bar">
+    <div class="nav-logo">
+      <a href="index.html">CinemaVerse</a>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="movies.html" class="active">Movies</a>
+      <a href="tvshows.html">TV Shows</a>
+      <a href="#">New</a>
+      <a href="#">My List</a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="header">
+    <h1>Cinematic Universe</h1>
+    <p>Discover the most captivating films from around the world, curated just for you.</p>
+  </header>
+
+  <!-- Filters -->
+  <div class="filters">
+    <div class="filter-tag active">All</div>
+    <div class="filter-tag">Action</div>
+    <div class="filter-tag">Drama</div>
+    <div class="filter-tag">Sci-Fi</div>
+    <div class="filter-tag">Comedy</div>
+    <div class="filter-tag">Horror</div>
+    <div class="filter-tag">Animation</div>
+  </div>
+
+  <!-- Movies Grid -->
+  <div class="movies-container">
+    <div class="movies-grid">
+      <!-- Movie 1 -->
+      <div class="movie-card stagger-fade-in" style="--index: 0;">
+        <div class="suggestion-badge">Trending</div>
+        <img src="https://image.tmdb.org/t/p/w500/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg" alt="Inception" class="movie-poster">
+        <div class="movie-overlay">
+          <h3 class="movie-title">Inception</h3>
+          <div class="movie-info">
+            <div class="movie-rating">
+              <span class="rating-star">★</span>
+              <span>8.8</span>
+            </div>
+            <div class="movie-year">2010</div>
+          </div>
+          <div class="movie-genres">
+            <span class="genre-tag">Sci-Fi</span>
+            <span class="genre-tag">Action</span>
+            <span class="genre-tag">Thriller</span>
+          </div>
+          <div class="movie-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movie 2 -->
+      <div class="movie-card stagger-fade-in" style="--index: 1;">
+        <img src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" alt="The Shawshank Redemption" class="movie-poster">
+        <div class="movie-overlay">
+          <h3 class="movie-title">The Shawshank Redemption</h3>
+          <div class="movie-info">
+            <div class="movie-rating">
+              <span class="rating-star">★</span>
+              <span>9.3</span>
+            </div>
+            <div class="movie-year">1994</div>
+          </div>
+          <div class="movie-genres">
+            <span class="genre-tag">Drama</span>
+            <span class="genre-tag">Crime</span>
+          </div>
+          <div class="movie-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movie 3 -->
+      <div class="movie-card stagger-fade-in" style="--index: 2;">
+        <div class="suggestion-badge">Must Watch</div>
+        <img src="https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg" alt="The Dark Knight" class="movie-poster">
+        <div class="movie-overlay">
+          <h3 class="movie-title">The Dark Knight</h3>
+          <div class="movie-info">
+            <div class="movie-rating">
+              <span class="rating-star">★</span>
+              <span>9.0</span>
+            </div>
+            <div class="movie-year">2008</div>
+          </div>
+          <div class="movie-genres">
+            <span class="genre-tag">Action</span>
+            <span class="genre-tag">Crime</span>
+            <span class="genre-tag">Drama</span>
+          </div>
+          <div class="movie-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movie 4 -->
+      <div class="movie-card stagger-fade-in" style="--index: 3;">
+        <img src="https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" alt="Fight Club" class="movie-poster">
+        <div class="movie-overlay">
+          <h3 class="movie-title">Fight Club</h3>
+          <div class="movie-info">
+            <div class="movie-rating">
+              <span class="rating-star">★</span>
+              <span>8.8</span>
+            </div>
+            <div class="movie-year">1999</div>
+          </div>
+          <div class="movie-genres">
+            <span class="genre-tag">Drama</span>
+            <span class="genre-tag">Thriller</span>
+          </div>
+          <div class="movie-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movie 5 -->
+      <div class="movie-card stagger-fade-in" style="--index: 4;">
+        <img src="https://image.tmdb.org/t/p/w500/lPsD10PP4rgUGiGR4CCXA6iY0QQ.jpg" alt="Spirited Away" class="movie-poster">
+        <div class="movie-overlay">
+          <h3 class="movie-title">Spirited Away</h3>
+          <div class="movie-info">
+            <div class="movie-rating">
+              <span class="rating-star">★</span>
+              <span>8.6</span>
+            </div>
+            <div class="movie-year">2001</div>
+          </div>
+          <div class="movie-genres">
+            <span class="genre-tag">Animation</span>
+            <span class="genre-tag">Fantasy</span>
+          </div>
+          <div class="movie-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movie 6 -->
+      <div class="movie-card stagger-fade-in" style="--index: 5;">
+        <div class="suggestion-badge">New Release</div>
+        <img src="https://image.tmdb.org/t/p/w500/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg" alt="Oppenheimer" class="movie-poster">
+        <div class="movie-overlay">
+          <h3 class="movie-title">Oppenheimer</h3>
+          <div class="movie-info">
+            <div class="movie-rating">
+              <span class="rating-star">★</span>
+              <span>8.5</span>
+            </div>
+            <div class="movie-year">2023</div>
+          </div>
+          <div class="movie-genres">
+            <span class="genre-tag">Drama</span>
+            <span class="genre-tag">History</span>
+            <span class="genre-tag">Biography</span>
+          </div>
+          <div class="movie-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movie 7 -->
+      <div class="movie-card stagger-fade-in" style="--index: 6;">
+        <img src="https://image.tmdb.org/t/p/w500/8kSerJrhrJWKLk1LViesGcnrUPE.jpg" alt="Interstellar" class="movie-poster">
+        <div class="movie-overlay">
+          <h3 class="movie-title">Interstellar</h3>
+          <div class="movie-info">
+            <div class="movie-rating">
+              <span class="rating-star">★</span>
+              <span>8.6</span>
+            </div>
+            <div class="movie-year">2014</div>
+          </div>
+          <div class="movie-genres">
+            <span class="genre-tag">Sci-Fi</span>
+            <span class="genre-tag">Adventure</span>
+            <span class="genre-tag">Drama</span>
+          </div>
+          <div class="movie-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movie 8 -->
+      <div class="movie-card stagger-fade-in" style="--index: 7;">
+        <img src="https://image.tmdb.org/t/p/w500/velWPhVMQeQKcxggNEU8YmIo52R.jpg" alt="The Godfather" class="movie-poster">
+        <div class="movie-overlay">
+          <h3 class="movie-title">The Godfather</h3>
+          <div class="movie-info">
+            <div class="movie-rating">
+              <span class="rating-star">★</span>
+              <span>9.2</span>
+            </div>
+            <div class="movie-year">1972</div>
+          </div>
+          <div class="movie-genres">
+            <span class="genre-tag">Crime</span>
+            <span class="genre-tag">Drama</span>
+          </div>
+          <div class="movie-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Movie Details Modal -->
+  <div class="modal">
+    <div class="modal-content">
+      <button class="modal-close">✕</button>
+      <div class="modal-header">
+        <img src="https://image.tmdb.org/t/p/original/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg" alt="Inception Backdrop" class="modal-backdrop">
+        <img src="https://image.tmdb.org/t/p/w500/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg" alt="Inception Poster" class="modal-poster">
+        <div class="modal-title-section">
+          <h2 class="modal-title">Inception</h2>
+          <div class="modal-info">
+            <span>2010</span>
+            <span>148 min</span>
+            <span>PG-13</span>
+            <div class="movie-rating">
+              <span class="rating-star">★</span>
+              <span>8.8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-description">
+          Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, stealing valuable secrets from deep within the subconscious during the dream state, when the mind is at its most vulnerable. Cobb's rare ability has made him a coveted player in this treacherous new world of corporate espionage, but it has also made him an international fugitive and cost him everything he has ever loved.
+        </div>
+        <div class="cast-section">
+          <h3>Cast</h3>
+          <div class="cast-scroll">
+            <div class="cast-member">
+              <img src="https://image.tmdb.org/t/p/w185/tJiSUYst4ddIaz1zge2LqCtu9tw.jpg" alt="Leonardo DiCaprio" class="cast-photo">
+              <div class="cast-name">Leonardo DiCaprio</div>
+              <div class="cast-role">Dom Cobb</div>
+            </div>
+            <div class="cast-member">
+              <img src="https://image.tmdb.org/t/p/w185/llkbyWKwpfowZ6C8peBjIV9jj99.jpg" alt="Joseph Gordon-Levitt" class="cast-photo">
+              <div class="cast-name">Joseph Gordon-Levitt</div>
+              <div class="cast-role">Arthur</div>
+            </div>
+            <div class="cast-member">
+              <img src="https://image.tmdb.org/t/p/w185/xDw3bG8cdwJo0Xvwu7nPrYKFZfE.jpg" alt="Ellen Page" class="cast-photo">
+              <div class="cast-name">Elliot Page</div>
+              <div class="cast-role">Ariadne</div>
+            </div>
+            <div class="cast-member">
+              <img src="https://image.tmdb.org/t/p/w185/aCaGUzhdCbIbfN1uxP9YCXdoQkP.jpg" alt="Tom Hardy" class="cast-photo">
+              <div class="cast-name">Tom Hardy</div>
+              <div class="cast-role">Eames</div>
+            </div>
+            <div class="cast-member">
+              <img src="https://image.tmdb.org/t/p/w185/n1hM4zsv9XPkkg08Lwf1lnUJPQS.jpg" alt="Ken Watanabe" class="cast-photo">
+              <div class="cast-name">Ken Watanabe</div>
+              <div class="cast-role">Saito</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- External JavaScript -->
+  <script src="movies.js"></script>
+  
+  <!-- Navigation Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to navigate to specified page
+      function navigateTo(url) {
+        window.location.href = url;
+      }
+      
+      // Handle all navigation links
+      const navLinks = document.querySelectorAll('.nav-links a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const href = this.getAttribute('href');
+          navigateTo(href);
+        });
+      });
+      
+      // Handle logo link
+      const logoLink = document.querySelector('.nav-logo a');
+      if (logoLink) {
+        logoLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          navigateTo('index.html');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

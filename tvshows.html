@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="tvshows.css">
+  <title>Immersive TV Shows Experience</title>
+  <!-- Add Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              dark: '#0a0e17',
+              DEFAULT: '#111827',
+              light: '#1f2937',
+            },
+            accent: {
+              teal: '#06b6d4',
+              cyan: '#22d3ee',
+              sky: '#0ea5e9',
+            },
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+            heading: ['Montserrat', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Particles.js -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <!-- GSAP Animation Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+</head>
+<body>
+  <!-- Particle Background -->
+  <div id="particles-js" class="fixed inset-0 z-0 opacity-40"></div>
+  
+  <!-- WebGL Transition Canvas -->
+  <div id="webgl-transition" class="fixed inset-0 z-[9999] pointer-events-none opacity-0"></div>
+  
+  <!-- Animated Background Gradients -->
+  <div class="bg-gradient-1"></div>
+  <div class="bg-gradient-2"></div>
+  <div class="bg-gradient-3"></div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-dot-outline"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="navigation-bar">
+    <div class="nav-logo">
+      <a href="index.html">CinemaVerse</a>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="movies.html">Movies</a>
+      <a href="tvshows.html" class="active">TV Shows</a>
+      <a href="#">New</a>
+      <a href="#">My List</a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="header">
+    <h1>Television Universe</h1>
+    <p>Explore groundbreaking series from around the world, curated for your binge-watching pleasure.</p>
+  </header>
+
+  <!-- Filters -->
+  <div class="filters-container">
+    <!-- Genre By Filter Section (ADDED) -->
+    <div class="filter-by-section">
+      <h3 class="filter-heading">Filter by Genre</h3>
+      <div class="filter-underline"></div>
+    </div>
+    
+    <!-- Filter Tags (Existing) -->
+    <div class="filters">
+      <div class="filter-tag active">All</div>
+      <div class="filter-tag">Drama</div>
+      <div class="filter-tag">Sci-Fi</div>
+      <div class="filter-tag">Comedy</div>
+      <div class="filter-tag">Fantasy</div>
+      <div class="filter-tag">Mystery</div>
+      <div class="filter-tag">Animation</div>
+      <div class="filter-tag">Crime</div>
+      <div class="filter-tag">Action</div>
+    </div>
+  </div>
+
+  <!-- TV Shows Grid -->
+  <div class="shows-container">
+    <div class="shows-grid">
+      <!-- Show 1 -->
+      <div class="show-card stagger-fade-in" style="--index: 0;">
+        <div class="suggestion-badge">Trending</div>
+        <img src="https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" alt="Breaking Bad" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">Breaking Bad</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>9.5</span>
+            </div>
+            <div class="show-year">2008-2013</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Drama</span>
+            <span class="genre-tag">Crime</span>
+            <span class="genre-tag">Thriller</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 2 -->
+      <div class="show-card stagger-fade-in" style="--index: 1;">
+        <img src="https://image.tmdb.org/t/p/w500/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg" alt="Game of Thrones" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">Game of Thrones</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>9.2</span>
+            </div>
+            <div class="show-year">2011-2019</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Fantasy</span>
+            <span class="genre-tag">Drama</span>
+            <span class="genre-tag">Action</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 3 -->
+      <div class="show-card stagger-fade-in" style="--index: 2;">
+        <div class="suggestion-badge">Must Watch</div>
+        <img src="https://image.tmdb.org/t/p/w500/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg" alt="Stranger Things" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">Stranger Things</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>8.7</span>
+            </div>
+            <div class="show-year">2016-Present</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Sci-Fi</span>
+            <span class="genre-tag">Mystery</span>
+            <span class="genre-tag">Drama</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 4 -->
+      <div class="show-card stagger-fade-in" style="--index: 3;">
+        <img src="https://image.tmdb.org/t/p/w500/gKG5QGz5Ngf8fgWpBsWtlg5L2SF.jpg" alt="The Office" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">The Office</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>8.9</span>
+            </div>
+            <div class="show-year">2005-2013</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Comedy</span>
+            <span class="genre-tag">Mockumentary</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 5 -->
+      <div class="show-card stagger-fade-in" style="--index: 4;">
+        <img src="https://image.tmdb.org/t/p/w500/yxMpoHO0CXP5o9gB7IfsciilQS4.jpg" alt="Rick and Morty" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">Rick and Morty</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>9.1</span>
+            </div>
+            <div class="show-year">2013-Present</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Animation</span>
+            <span class="genre-tag">Comedy</span>
+            <span class="genre-tag">Sci-Fi</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 6 -->
+      <div class="show-card stagger-fade-in" style="--index: 5;">
+        <div class="suggestion-badge">New Season</div>
+        <img src="https://image.tmdb.org/t/p/w500/MoEKaPFHABtA1xKoOteirGaHl1.jpg" alt="The Mandalorian" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">The Mandalorian</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>8.8</span>
+            </div>
+            <div class="show-year">2019-Present</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Sci-Fi</span>
+            <span class="genre-tag">Action</span>
+            <span class="genre-tag">Fantasy</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 7 -->
+      <div class="show-card stagger-fade-in" style="--index: 6;">
+        <img src="https://image.tmdb.org/t/p/w500/4X7o1ssOEvp4BFLim1AZmPNcYbU.jpg" alt="Succession" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">Succession</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>8.8</span>
+            </div>
+            <div class="show-year">2018-2023</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Drama</span>
+            <span class="genre-tag">Comedy</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 8 -->
+      <div class="show-card stagger-fade-in" style="--index: 7;">
+        <img src="https://image.tmdb.org/t/p/w500/xf9wuDcqlUPWABZNeDKPbZUjWx0.jpg" alt="The Witcher" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">The Witcher</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>8.2</span>
+            </div>
+            <div class="show-year">2019-Present</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Fantasy</span>
+            <span class="genre-tag">Action</span>
+            <span class="genre-tag">Drama</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 9 -->
+      <div class="show-card stagger-fade-in" style="--index: 8;">
+        <img src="https://image.tmdb.org/t/p/w500/5UH6YnpTQxzK1LKnnSlO3PzfLlg.jpg" alt="The Crown" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">The Crown</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>8.7</span>
+            </div>
+            <div class="show-year">2016-2023</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Drama</span>
+            <span class="genre-tag">History</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 10 -->
+      <div class="show-card stagger-fade-in" style="--index: 9;">
+        <div class="suggestion-badge">Award Winner</div>
+        <img src="https://image.tmdb.org/t/p/w500/37ER1Xmdjt7i8Oe1cTsSyhkDnVf.jpg" alt="Chernobyl" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">Chernobyl</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>9.3</span>
+            </div>
+            <div class="show-year">2019</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Drama</span>
+            <span class="genre-tag">History</span>
+            <span class="genre-tag">Thriller</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 11 -->
+      <div class="show-card stagger-fade-in" style="--index: 10;">
+        <img src="https://image.tmdb.org/t/p/w500/kosSx7vUbDcZUF8YO4VFzLW4T0w.jpg" alt="Sherlock" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">Sherlock</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>8.9</span>
+            </div>
+            <div class="show-year">2010-2017</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Crime</span>
+            <span class="genre-tag">Mystery</span>
+            <span class="genre-tag">Drama</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show 12 -->
+      <div class="show-card stagger-fade-in" style="--index: 11;">
+        <img src="https://image.tmdb.org/t/p/w500/vIl6RsnU8Yk6WFGpihD0eO5fGN4.jpg" alt="Arcane" class="show-poster">
+        <div class="show-overlay">
+          <h3 class="show-title">Arcane</h3>
+          <div class="show-info">
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>9.0</span>
+            </div>
+            <div class="show-year">2021-Present</div>
+          </div>
+          <div class="show-genres">
+            <span class="genre-tag">Animation</span>
+            <span class="genre-tag">Action</span>
+            <span class="genre-tag">Fantasy</span>
+          </div>
+          <div class="show-actions">
+            <button class="watch-btn">Watch Now</button>
+            <div class="watchlist-badge">+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Show Details Modal -->
+  <div class="modal">
+    <div class="modal-content">
+      <button class="modal-close">✕</button>
+      <div class="modal-header">
+        <img src="https://image.tmdb.org/t/p/original/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" alt="Breaking Bad Backdrop" class="modal-backdrop">
+        <img src="https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" alt="Breaking Bad Poster" class="modal-poster">
+        <div class="modal-title-section">
+          <h2 class="modal-title">Breaking Bad</h2>
+          <div class="modal-info">
+            <span>2008-2013</span>
+            <span>5 Seasons</span>
+            <span>TV-MA</span>
+            <div class="show-rating">
+              <span class="rating-star">★</span>
+              <span>9.5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-description">
+          A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's future. As his status grows, so does his ego, transforming him from mild-mannered family man to ruthless player in the local drug trade.
+        </div>
+        <div class="cast-section">
+          <h3>Cast</h3>
+          <div class="cast-scroll">
+            <div class="cast-member">
+              <img src="https://image.tmdb.org/t/p/w185/4SYTH5FdB0dAORV98Nwg3llgVnY.jpg" alt="Bryan Cranston" class="cast-photo">
+              <div class="cast-name">Bryan Cranston</div>
+              <div class="cast-role">Walter White</div>
+            </div>
+            <div class="cast-member">
+              <img src="https://image.tmdb.org/t/p/w185/oTceIejHQEpGLilgM9T6QpwaCPK.jpg" alt="Aaron Paul" class="cast-photo">
+              <div class="cast-name">Aaron Paul</div>
+              <div class="cast-role">Jesse Pinkman</div>
+            </div>
+            <div class="cast-member">
+              <img src="https://image.tmdb.org/t/p/w185/A3P3tg8G0yg8Ed0Ys6cusKRd1lK.jpg" alt="Anna Gunn" class="cast-photo">
+              <div class="cast-name">Anna Gunn</div>
+              <div class="cast-role">Skyler White</div>
+            </div>
+            <div class="cast-member">
+              <img src="https://image.tmdb.org/t/p/w185/wJPP9nTvF2nyvW7iEYqzQPzLKP0.jpg" alt="Dean Norris" class="cast-photo">
+              <div class="cast-name">Dean Norris</div>
+              <div class="cast-role">Hank Schrader</div>
+            </div>
+            <div class="cast-member">
+              <img src="https://image.tmdb.org/t/p/w185/5ZCyJKFLyMZZ0PR7s8KHV9vu8o.jpg" alt="Bob Odenkirk" class="cast-photo">
+              <div class="cast-name">Bob Odenkirk</div>
+              <div class="cast-role">Saul Goodman</div>
+            </div>
+          </div>
+        </div>
+        <div class="seasons-section">
+          <h3>Seasons</h3>
+          <div class="seasons-grid">
+            <div class="season-item">
+              <div class="season-number">Season 1</div>
+              <div class="episode-count">7 Episodes</div>
+            </div>
+            <div class="season-item">
+              <div class="season-number">Season 2</div>
+              <div class="episode-count">13 Episodes</div>
+            </div>
+            <div class="season-item">
+              <div class="season-number">Season 3</div>
+              <div class="episode-count">13 Episodes</div>
+            </div>
+            <div class="season-item">
+              <div class="season-number">Season 4</div>
+              <div class="episode-count">13 Episodes</div>
+            </div>
+            <div class="season-item">
+              <div class="season-number">Season 5</div>
+              <div class="episode-count">16 Episodes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Make sure cursor is visible if custom cursor fails -->
+  <script>
+    // Fallback for custom cursor
+    setTimeout(() => {
+      if (document.body.style.cursor === 'none' && 
+          (!document.querySelector('.cursor-dot') || 
+           !document.querySelector('.cursor-dot-outline'))) {
+        document.body.style.cursor = 'auto';
+        
+        // Also ensure all interactive elements have proper cursor
+        const elements = document.querySelectorAll('button, .filter-tag, .watchlist-badge, .show-card, .modal-close');
+        elements.forEach(el => {
+          el.style.cursor = 'pointer';
+        });
+      }
+    }, 1000);
+  </script>
+
+  <!-- External JavaScript -->
+  <script src="tvshows.js"></script>
+  
+  <!-- Navigation Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to navigate to specified page
+      function navigateTo(url) {
+        window.location.href = url;
+      }
+      
+      // Handle all navigation links
+      const navLinks = document.querySelectorAll('.nav-links a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const href = this.getAttribute('href');
+          navigateTo(href);
+        });
+      });
+      
+      // Handle logo link
+      const logoLink = document.querySelector('.nav-logo a');
+      if (logoLink) {
+        logoLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          navigateTo('index.html');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
